@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Eye Test Online</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{
+  --btn-color:#1034a6;
+  --bg:#ffffff;
+  --text:#2b2b2b;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+/* ===== HEADER ===== */
+header{
+  height:72px;
+  padding:0 48px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#fff;
+}
+.header-buttons{
+  display:flex;
+  gap:12px;
+}
+.start-btn,.home-btn{
+  background:var(--btn-color);
+  color:#fff;
+  padding:10px 24px;
+  border-radius:22px;
+  cursor:pointer;
+  border:none;
+}
+/* ===== MAIN PAGE ===== */
+.hero{
+  text-align:center;
+  padding:120px 20px;
+}
+.hero h1{font-size:56px}
+.hero p{
+  font-size:20px;
+  max-width:700px;
+  margin:20px auto 40px;
+}
+.hero .actions{
+  display:flex;
+  gap:16px;
+  justify-content:center;
+}
+.hero button{
+  background:var(--btn-color);
+  border:none;
+  padding:16px 36px;
+  font-size:18px;
+  color:#fff;
+  border-radius:30px;
+  cursor:pointer;
+}
+/* ===== Q&A SECTION ===== */
+#qaSection{
+  max-width:700px;
+  margin:80px 0 60px 50px;
+  padding-left:20px;
+  text-align:left;
+}
+#qaSection h2{
+  font-size:42px;
+  margin-bottom:40px;
+  letter-spacing:10px;
+}
+.qa-item p.q{
+  font-size:24px;
+  font-weight:bold;
+  margin:10px 0 5px 0;
+}
+.qa-item p.a{
+  font-size:24px;
+  margin:0 0 40px 0;
+}
+/* ===== TEST WRAPPER ===== */
+#testWrapper{
+  display:none;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+.chart-frame{
+  width:520px;
+  height:650px;
+  background:#fff;
+  padding:28px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 6px 18px rgba(0,0,0,.1);
+}
+/* ===== PAGES ===== */
+.page{
+  flex:1;
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+.page.active{display:flex}
+.page p{font-size:18px}
+/* ===== BUTTON ===== */
+.button{
+  padding:12px 28px;
+  font-size:16px;
+  background:var(--btn-color);
+  border:none;
+  color:#fff;
+  cursor:pointer;
+  border-radius:6px;
+}
+/* ===== EYES ===== */
+.face{display:flex;gap:40px;margin-bottom:20px}
+.eye{
+  width:70px;height:70px;
+  border-radius:50%;
+  border:3px solid #1f2a33;
+  position:relative;
+  overflow:hidden;
+}
+.pupil{
+  width:18px;height:18px;
+  background:#1f2a33;
+  border-radius:50%;
+  position:absolute;
+  top:26px;left:26px;
+}
+.eyelid{
+  position:absolute;
+  inset:0;
+  background:#edf2f6;
+  transform-origin:top;
+  animation:blink 4s infinite;
+}
+.eye.right .eyelid{animation-delay:2s}
+@keyframes blink{
+  0%,90%,100%{transform:scaleY(0)}
+  45%,55%{transform:scaleY(1)}
+}
+/* ===== VISION TEST ===== */
+.title{font-size:16px}
+.subtitle{font-size:12px;margin-bottom:10px}
+.test-area{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+#eContainer{
+  height:180px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.controls{
+  display:grid;
+  grid-template-columns:repeat(2,90px);
+  gap:18px;
+  margin-top:20px;
+}
+.e-button{
+  width:90px;height:90px;
+  border:1px solid #999;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  background:#fff;
+  border-radius:12px;
+}
+.e{position:relative}
+.bar{position:absolute;background:#000}
+.info{font-size:12px;margin-top:10px}
+/* ===== ASTIGMATISM ===== */
+.astig-svg{width:300px;height:300px}
+</style>
+</head>
+<body>
+<header>
+  <div>VISION</div>
+  <div class="header-buttons">
+    <div class="home-btn" onclick="goHome()">Home</div>
+  </div>
+</header>
+<section class="hero" id="mainPage">
+  <h1>Eye Test Online</h1>
+  <p>Free near-vision screening using a Tumbling E chart.</p>
+  <div class="actions">
+    <button onclick="startVisionTest()">Start Vision Test Online</button>
+    <button onclick="startAstigmatism()">Check for signs of astigmatism</button>
+  </div>
+</section>
+
+<!-- ===== Q&A ONLY MAIN PAGE ===== -->
+<section id="qaSection">
+  <h2>QUESTION & ANSWER</h2>
+  <div class="qa-item">
+    <p class="q">What are eye Tumbling E chart test?</p>
+    <p class="a"> In this chart you see only E letters which each time comes smaller. In the original and correct version have standart letters with the 20 feet distance. </p>
+  </div>
+  <div class="qa-item">
+    <p class="q">Q2: Do I need glasses?</p>
+    <p class="a">A: You can take the test with or without glasses, but better without.</p>
+  </div>
+  <div class="qa-item">
+    <p class="q">Q3: How far should I hold the device?</p>
+    <p class="a">A: Keep it about arm’s length away from your eyes.</p>
+  </div>
+  <div class="qa-item">
+    <p class="q">Q4: Can I take it on mobile?</p>
+    <p class="a">A: Yes, it works on phones and tablets too.</p>
+  </div>
+  <div class="qa-item">
+    <p class="q">Q5: Is it accurate?</p>
+    <p class="a">A: It’s a screening test, not a professional diagnosis.</p>
+  </div>
+</section>
+
+<div id="testWrapper">
+  <div class="chart-frame" id="app">
+    <div class="page active" id="page1">
+      <p><b>Tumbling E Vision Test</b><br>Prepare for the test<br>Take off your glasses</p>
+      <button class="button" onclick="nextPage(2)">Next</button>
+    </div>
+    <div class="page" id="page2">
+      <p>Increase screen brightness<br>Press F11</p>
+      <button class="button" onclick="nextPage(3)">Next</button>
+    </div>
+    <div class="page" id="page3">
+      <p>Keep device at arm’s length</p>
+      <button class="button" onclick="nextPage(4)">Next</button>
+    </div>
+    <div class="page" id="page4">
+      <div class="face">
+        <div class="eye"><div class="pupil"></div><div class="eyelid"></div></div>
+        <div class="eye right"><div class="pupil"></div><div class="eyelid"></div></div>
+      </div>
+      <p>Cover your <b>left eye</b></p>
+      <button class="button" onclick="startTest('left')">Start Test</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== NAV ===== */
+function startVisionTest(){
+  mainPage.style.display="none";
+  qaSection.style.display="none";
+  testWrapper.style.display="flex";
+  showPage(1);
+}
+function startAstigmatism(){
+  mainPage.style.display="none";
+  qaSection.style.display="none";
+  testWrapper.style.display="flex";
+  showPageAstigPrep();
+}
+function goHome(){
+  testWrapper.style.display="none";
+  mainPage.style.display="block";
+  qaSection.style.display="block";
+}
+function showPage(n){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page"+n).classList.add("active");
+}
+function nextPage(n){showPage(n);}
+
+/* ===== VISION TEST ===== */
+const levels=[
+{label:"2/10",mm:8.87},{label:"2/8",mm:7.1},{label:"2/6",mm:5.32},
+{label:"2/5",mm:4.43},{label:"2/4",mm:3.55},{label:"2/3",mm:2.66},
+{label:"2/2",mm:1.77},{label:"2/1.5",mm:1.33}
+];
+const pxPerMm=4;
+let levelIndex=0,trial=0,correct=0,currentEye;
+let leftEye=0,rightEye=0,currentDirection;
+function startTest(eye){
+  currentEye=eye;
+  levelIndex=trial=correct=0;
+  app.innerHTML=`
+    <div class="title">Near Vision Screening</div>
+    <div class="subtitle">Tumbling E · Arm’s-length</div>
+    <div class="test-area">
+      <div id="eContainer"></div>
+      <div class="controls">
+        <div class="e-button" onclick="answer('right')"></div>
+        <div class="e-button" onclick="answer('up')"></div>
+        <div class="e-button" onclick="answer('down')"></div>
+        <div class="e-button" onclick="answer('left')"></div>
+      </div>
+      <div class="info" id="info"></div>
+    </div>`;
+  initTest();
+}
+function initTest(){
+  currentDirection=randomDir();
+  drawMain();
+  ["right","up","down","left"].forEach((d,i)=>{
+    drawE(document.querySelectorAll(".e-button")[i],36,d);
+  });
+}
+function randomDir(){return["up","down","left","right"][Math.floor(Math.random()*4)];}
+function drawE(t,s,d){
+  t.innerHTML="";
+  const e=document.createElement("div");
+  e.className="e";
+  e.style.width=e.style.height=s+"px";
+  const stroke=s/5;
+  [
+    {t:0,l:0,w:s,h:stroke},
+    {t:s/2-stroke/2,l:0,w:s*.8,h:stroke},
+    {b:0,l:0,w:s,h:stroke},
+    {t:0,l:0,w:stroke,h:s}
+  ].forEach(b=>{
+    const bar=document.createElement("div");
+    bar.className="bar";
+    Object.assign(bar.style,{
+      top:b.t!=null?b.t+"px":"auto",
+      bottom:b.b!=null?b.b+"px":"auto",
+      left:b.l+"px",width:b.w+"px",height:b.h+"px"
+    });
+    e.appendChild(bar);
+  });e.style.transform = {
+  up: "rotate(0deg)",
+  right: "rotate(90deg)",
+  down: "rotate(180deg)",
+  left: "rotate(270deg)"
+}[d];
+  t.appendChild(e);
+}
+function drawMain(){
+  drawE(eContainer,levels[levelIndex].mm*pxPerMm,currentDirection);
+  info.textContent=`Level ${levels[levelIndex].label} · Trial ${trial+1}/3`;
+}
+function answer(d){
+  if(d===currentDirection) correct++;
+  trial++;
+  if(trial>=3){
+    if(correct>=2 && levelIndex<levels.length-1){
+      levelIndex++; trial=correct=0;
+    }else{
+      if(currentEye==="left"){
+        leftEye=levelIndex;
+        app.innerHTML=`
+        <div class="page active">
+          <div class="face">
+            <div class="eye"><div class="pupil"></div><div class="eyelid"></div></div>
+            <div class="eye right"><div class="pupil"></div><div class="eyelid"></div></div>
+          </div>
+          <p>Cover your <b>right eye</b></p>
+          <button class="button" onclick="startTest('right')">Continue</button>
+        </div>`;
+        return;
+      }
+      rightEye=levelIndex;
+      showResult(); return;
+    }
+  }
+  currentDirection=randomDir();
+  drawMain();
+}
+function showResult(){
+  app.innerHTML=`
+  <div class="page active">
+    <p><b>Screening Complete</b><br><br>
+    Left Eye: ${levels[leftEye].label}<br>
+    Right Eye: ${levels[rightEye].label}</p>
+  </div>`;
+}
+
+/* ===== ASTIGMATISM TEST ===== */
+let astigEye="", astigRes={left:null,right:null};
+function showPageAstigPrep(){
+  app.innerHTML=`
+    <div class="page active">
+      <div class="face">
+        <div class="eye"><div class="pupil"></div><div class="eyelid"></div></div>
+        <div class="eye right"><div class="pupil"></div><div class="eyelid"></div></div>
+      </div>
+      <p><b>Astigmatism Clock Dial Test</b><br>Prepare for the test<br>Take off your glasses</p>
+      <button class="button" onclick="startAstigEye('left')">Next</button>
+    </div>`;
+}
+function startAstigEye(e){
+  astigEye=e;
+  app.innerHTML=`
+    <div class="page active">
+      <p>Cover your ${astigEye} eye. Do some lines look darker or missing?</p>
+      ${buildClockDial()}
+      <button class="button" onclick="recordAstig(true)">Yes</button>
+      <button class="button" onclick="recordAstig(false)">No</button>
+    </div>`;
+}
+function recordAstig(v){
+  astigRes[astigEye]=v;
+  if(astigEye==="left"){
+    startAstigEye("right");
+  }else{
+    app.innerHTML=`
+      <div class="page active">
+        <p><b>Astigmatism Screening Result</b><br><br>
+        Left Eye: ${astigRes.left?"Possible signs":"No obvious signs"}<br>
+        Right Eye: ${astigRes.right?"Possible signs":"No obvious signs"}</p>
+      </div>`;
+  }
+}
+function buildClockDial(){
+  const cx = 150;
+  const cy = 150;
+  const innerR = 22;
+  const lineLen = 105;
+  const gap = 4;
+  let svg = `<svg class="astig-svg" viewBox="-10 -10 320 320">`;
+  svg += `<circle cx="${cx}" cy="${cy}" r="${innerR}" fill="none" stroke="#000" stroke-width="2"/>`;
+  for(let i=0;i<12;i++){
+    const angle = (i*30-90)*Math.PI/180;
+    const px = Math.cos(angle+Math.PI/2);
+    const py = Math.sin(angle+Math.PI/2);
+    for(let j=-1;j<=1;j++){
+      const ox = px*gap*j;
+      const oy = py*gap*j;
+      const x1=cx+Math.cos(angle)*innerR+ox;
+      const y1=cy+Math.sin(angle)*innerR+oy;
+      const x2=cx+Math.cos(angle)*(innerR+lineLen)+ox;
+      const y2=cy+Math.sin(angle)*(innerR+lineLen)+oy;
+      svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#000" stroke-width="2"/>`;
+    }
+    const tx = cx + Math.cos(angle)*(innerR+lineLen+14);
+    const ty = cy + Math.sin(angle)*(innerR+lineLen+14);
+    svg += `<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="middle" font-size="14">${i===0?12:i}</text>`;
+  }
+  svg += `</svg>`;
+  return svg;
+}
+</script>
+</body>
+</html>
